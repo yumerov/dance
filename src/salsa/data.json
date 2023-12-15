@@ -1,10 +1,20 @@
-[
-    {
-        "id": 1,
-        "label": "Basic"
-    },
-    {
-        "id": 2,
-        "label": "Side basic"
-    }
-]
+{
+    "data": [
+        {
+            "id": 1,
+            "label": "Basic"
+        },
+        {
+            "id": 2,
+            "label": "Side basic"
+        },
+        {
+            "id": 3,
+            "label": "Latin cross"
+        },
+        {
+            "id": 5,
+            "label": "Cross body lead"
+        }
+    ]
+}

@@ -25,6 +25,15 @@ class FieldsDOM {
     render() {
         const element = document.createElement('div');
         element.classList.add('fields');
+        element.classList.add('column');
+
+        const fieldset = document.createElement('fieldset');
+        const legend = document.createElement('legend');
+
+        legend.innerText = 'Figures';
+        fieldset.append(legend);
+
+        element.append(fieldset);
 
         return element;
     }
@@ -34,8 +43,37 @@ class OptionsDOM {
     render() {
         const element = document.createElement('div');
         element.classList.add('options');
+        element.classList.add('column');
+
+        const fieldset = document.createElement('fieldset');
+        const legend = document.createElement('legend');
+
+        legend.innerText = 'Options';
+        fieldset.append(legend);
+
+        fieldset.append(this.createRepeatCheckbox());
+
+        element.append(fieldset);
 
         return element;
+    }
+
+    createRepeatCheckbox()
+    {
+        const wrapperElement = document.createElement('label');
+        const maxRepeats = document.createElement('input');
+        const labelElement = document.createElement('span');
+
+        maxRepeats.setAttribute('type', 'number');
+        maxRepeats.value = 3;
+        maxRepeats.setAttribute('min', 0);
+        maxRepeats.setAttribute('max', 5);
+        labelElement.innerText = 'Max repeats: ';
+
+        wrapperElement.append(labelElement);
+        wrapperElement.append(maxRepeats);
+
+        return wrapperElement;
     }
 }
 
@@ -44,14 +82,22 @@ class ActionsDOM {
         const clean = this.createButton('clean', 'clean', 'Clean');
         const add = this.createButton('add', 'add', 'Add');
         const add5 = this.createButton('add5', 'add5', 'Add +5');
-        const add10 = this.createButton('add10', 'add10', 'Add +10');
 
         const element = document.createElement('div');
         element.classList.add('actions');
-        element.append(clean);
-        element.append(add);
-        element.append(add5);
-        element.append(add10);
+        element.classList.add('column');
+
+        const fieldset = document.createElement('fieldset');
+        const legend = document.createElement('legend');
+
+        legend.innerText = 'Actions';
+        fieldset.append(legend);
+
+        fieldset.append(clean);
+        fieldset.append(add);
+        fieldset.append(add5);
+
+        element.append(fieldset);
 
         return element;
     }
@@ -89,6 +135,7 @@ class FigureField
         const labelElement = document.createElement('span');
 
         checkboxElement.setAttribute('type', 'checkbox');
+        checkboxElement.checked = true;
         labelElement.innerText = figure.label;
         wrapperElement.append(checkboxElement);
 
@@ -98,39 +145,34 @@ class FigureField
     }
 }
 
-class FigureFields
+class Store 
 {
-    fields = [];
+    figuresCheckMap = {};
+    figures = {};
 
-    constructor(fields)
-    {
-        this.fields = fields;
-    }
-
-    init(data)
-    {
-        const fieldset = document.createElement('fieldset');
-        const legend = document.createElement('legend');
-
-        legend.innerText = 'Figures';
-        fieldset.append(legend);
-
-        return fieldset;
+    /**
+     * @param {Figure} figure 
+     */
+    add(figure) {
+        this.figuresCheckMap[figure.id] = true;
+        this.figures[figure.id] = figure;
     }
 }
 
 class App
 {
     appContainer;
-    figures;
-    init()
+    /**
+     * @var {Store}
+     */
+    store;
+    async init()
     {
         this.appContainer = document.getElementById('app');
-        // this.figures = (new FigureFields(fields));
-        // fetch("/salsa/data.json")
-        //     .then( (data) => data.json().then((data) => {
-        //         this.renderFields(data)
-        //     }));
+        this.store = new Store();
+        const response = await fetch("/salsa/data.json");
+        const data = await response.json();
+        data.data.forEach(_ => this.store.add(new Figure(_.id, _.label)));
         
         return this;
     }
@@ -138,8 +180,12 @@ class App
     render()
     {
         const header = (new HeaderDOM()).render();
+        const fieldsDOM = (new FieldsDOM()).render();
+        const fieldset = fieldsDOM.querySelector('fieldset');
 
-        header.append((new FieldsDOM()).render());
+        this.renderFields().forEach(_ => fieldset.append(_));
+
+        header.append(fieldsDOM);
         header.append((new OptionsDOM()).render());
         header.append((new ActionsDOM()).render());
 
@@ -148,15 +194,10 @@ class App
         this.appContainer.append((new OutputDOM).render());
     }
 
-    renderFields(fields)
+    renderFields()
     {
-        this.appContainer.append(this.figures.init());
-
-        fields.forEach(field => {
-            const figure = new Figure(field.id, field.label);
-            this.figures.push(new Figure(field.id, field.label));
-            (new FigureField(this.appContainer)).init(figure);
-        });
+        return Object.values(this.store.figures)
+            .map(figure => (new FigureField()).render(figure));
     }
 
     getRandomFigure()
@@ -165,7 +206,8 @@ class App
     }
 }
 
-(new App()).init().render();
+const app = new App();
+app.init().then(() => app.render());
 
 // document.querySelector('#add').addEventListener('click', () => {
 //     const figure = app.getRandomFigure();
