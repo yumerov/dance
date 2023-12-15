@@ -13,7 +13,11 @@
             "label": "Latin cross"
         },
         {
-            "id": 5,
+            "id": 4,
+            "label": "Open latin cross"
+        },
+        {
+            "id": 6,
             "label": "Cross body lead"
         }
     ]

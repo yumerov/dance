@@ -136,6 +136,14 @@ class FigureField
 
         checkboxElement.setAttribute('type', 'checkbox');
         checkboxElement.checked = true;
+        checkboxElement.dataset.id = figure.id;
+        checkboxElement.onchange = _ => document.dispatchEvent(new CustomEvent(
+            'checkbox-toggle', {
+                detail: {
+                    id: _.target.dataset.id,
+                    checked: _.target.checked
+                }
+            }))
         labelElement.innerText = figure.label;
         wrapperElement.append(checkboxElement);
 
@@ -149,6 +157,20 @@ class Store
 {
     figuresCheckMap = {};
     figures = {};
+
+    init()
+    {
+        document.addEventListener(
+            'checkbox-toggle',
+            _ => {
+                this.figuresCheckMap[parseInt(_.detail.id)] = _.detail.checked
+
+                console.log(Object.keys(this.figuresCheckMap).filter(_ => this.figuresCheckMap[_]))
+            }
+        );
+
+        return this;
+    }
 
     /**
      * @param {Figure} figure 
@@ -169,7 +191,7 @@ class App
     async init()
     {
         this.appContainer = document.getElementById('app');
-        this.store = new Store();
+        this.store = (new Store()).init();
         const response = await fetch("/salsa/data.json");
         const data = await response.json();
         data.data.forEach(_ => this.store.add(new Figure(_.id, _.label)));
