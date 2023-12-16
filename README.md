@@ -12,6 +12,11 @@ src/
         index.html # includes app and data to build the frontend
 ```
 
+## Commands
+
+- `npm run lint # ./node_modules/.bin/eslint src/salsa/app.js` - linting
+- `npm run lint-fix # ./node_modules/.bin/eslint src/salsa/app.js` - lint fixing
+
 ## TODO
 
 - [ ] Better UI / some basic styles
