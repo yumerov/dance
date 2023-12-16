@@ -2,11 +2,13 @@
     "data": [
         {
             "id": 1,
-            "label": "Basic"
+            "label": "Basic",
+            "description": "Front & back"
         },
         {
             "id": 2,
-            "label": "Side basic"
+            "label": "Side basic",
+            "description": "Side to side"
         },
         {
             "id": 3,
@@ -19,6 +21,46 @@
         {
             "id": 6,
             "label": "Cross body lead"
+        },
+        {
+            "id": 7,
+            "label": "New York"
+        },
+        {
+            "id": 8,
+            "label": "Cuban break"
+        },
+        {
+            "id": 9,
+            "label": "Two-handed basic"
+        },
+        {
+            "id": 10,
+            "label": "Two-handede cross body lead"
+        },
+        {
+            "id": 11,
+            "label": "Adios"
+        },
+        {
+            "id": 12,
+            "label": "Adios tres"
+        },
+        {
+            "id": 13,
+            "label": "Open break & right turn"
+        },
+        {
+            "id": 14,
+            "label": "Enchufla"
+        },
+        {
+            "id": 15,
+            "label": "Casino"
+        },
+        {
+            "id": 16,
+            "label": "Dile que Si"
         }
     ]
 }

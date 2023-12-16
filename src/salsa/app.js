@@ -164,8 +164,7 @@ class Store
             'checkbox-toggle',
             _ => {
                 this.figuresCheckMap[parseInt(_.detail.id)] = _.detail.checked
-
-                console.log(Object.keys(this.figuresCheckMap).filter(_ => this.figuresCheckMap[_]))
+                // console.log(Object.keys(this.figuresCheckMap).filter(_ => this.figuresCheckMap[_]))
             }
         );
 

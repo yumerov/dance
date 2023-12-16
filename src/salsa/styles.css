@@ -3,8 +3,13 @@
     margin: 0 auto;
 }
 
+.header {
+    display: table;
+}
+
 .header .column {
     float: left;
+    display: table-cell;
 }
 
 .fields {
@@ -23,6 +28,12 @@
     width: 100%;
     margin-bottom: 3px;
     cursor: pointer;
+}
+
+.fields label {
+    margin-right: 5px;
+    margin-bottom: 5px;
+    display: inline-block;
 }
 
 input[type="number"] {
