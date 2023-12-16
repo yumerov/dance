@@ -22,7 +22,7 @@ src/
 - [ ] Better UI / some basic styles
 - [x] Structured figure checklist
 - [x] Liniting
-- [ ] Pipeline
+- [x] Pipeline
 - [ ] Add styles(LA, NY, Cuban) - checking/unchecking should check/uncheck figures
 - [ ] Not repeating checkbox
 - [ ] Max repeat input option
