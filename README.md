@@ -20,7 +20,9 @@ src/
 ## TODO
 
 - [ ] Better UI / some basic styles
-- [x] structured figure checklist
+- [x] Structured figure checklist
+- [x] Liniting
+- [ ] Pipeline
 - [ ] Add styles(LA, NY, Cuban) - checking/unchecking should check/uncheck figures
 - [ ] Not repeating checkbox
 - [ ] Max repeat input option
