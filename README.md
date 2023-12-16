@@ -14,11 +14,11 @@ src/
 
 ## TODO
 
-- [ ] better UI / some basic styles
-- [ ] structured figure checklist
-- [ ] add styles(LA, NY, Cuban) - checking/unchecking should check/uncheck figures
-- [ ] not repeating checkbox
+- [ ] Better UI / some basic styles
+- [x] structured figure checklist
+- [ ] Add styles(LA, NY, Cuban) - checking/unchecking should check/uncheck figures
+- [ ] Not repeating checkbox
 - [ ] Max repeat input option
+- [ ] "Clean" button
 - [ ] "Add" button
 - [ ] "Add 5" button
-- [ ] "Add 10" button

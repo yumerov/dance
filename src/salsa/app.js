@@ -160,18 +160,41 @@ class FigureField
     }
 }
 
+class Events {
+    static add() {
+        alert('click')
+        const figure = app.getRandomFigure();
+        // const listItem = document.createElement('li');
+        // listItem.innerText = figure.label;
+
+        // document.querySelector('.output').querySelector('.list').append(listItem);
+    }
+
+    static onCheckboxToggle(callback)
+    {
+        document.addEventListener('checkbox-toggle', callback);
+    }
+}
+
 class Store 
 {
     figuresCheckMap = {};
     figures = {};
+    renderedList = [];
 
     init()
     {
-        document.addEventListener(
-            'checkbox-toggle',
+        Events.onCheckboxToggle(
             _ => {
                 this.figuresCheckMap[parseInt(_.detail.id)] = _.detail.checked
-                // console.log(Object.keys(this.figuresCheckMap).filter(_ => this.figuresCheckMap[_]))
+                const activeFigures = Object.keys(this.figuresCheckMap).filter(_ => this.figuresCheckMap[_]);
+                const classList = document.querySelector('.fields fieldset').classList;
+
+                if (activeFigures.length === 0) {
+                    classList.add('error');
+                } else {
+                    classList.remove('error');
+                }
             }
         );
 
@@ -184,6 +207,14 @@ class Store
     add(figure) {
         this.figuresCheckMap[figure.id] = true;
         this.figures[figure.id] = figure;
+    }
+
+    
+
+    getRandomFigure() {
+        const activeFigures = Object.keys(this.figuresCheckMap).filter(_ => this.figuresCheckMap[_]);
+
+        return activeFigures[Math.floor((Math.random() * activeFigures.length))];
     }
 }
 
@@ -211,7 +242,7 @@ class App
         const fieldsDOM = (new FieldsDOM()).render();
         const fieldset = fieldsDOM.querySelector('fieldset');
 
-        this.renderFields().forEach(_ => fieldset.append(_));
+        this._renderFields().forEach(_ => fieldset.append(_));
 
         header.append(fieldsDOM);
         header.append((new OptionsDOM()).render());
@@ -220,27 +251,23 @@ class App
         this.appContainer.append(header);
 
         this.appContainer.append((new OutputDOM).render());
+
+        return this;
     }
 
-    renderFields()
+    initListeners()
+    {
+        document.querySelector('#add').addEventListener('click', _ => {
+            console.log(this.store.getRandomFigure());
+        });
+    }
+
+    _renderFields()
     {
         return Object.values(this.store.figures)
             .map(figure => (new FigureField()).render(figure));
     }
-
-    getRandomFigure()
-    {
-        return this.figures[Math.floor((Math.random() * this.figures.length))];
-    }
 }
 
 const app = new App();
-app.init().then(() => app.render());
-
-// document.querySelector('#add').addEventListener('click', () => {
-//     const figure = app.getRandomFigure();
-//     const listItem = document.createElement('li');
-//     listItem.innerText = figure.label;
-
-//     document.querySelector('.output').querySelector('.list').append(listItem);
-// });
+app.init().then(() => app.render().initListeners());

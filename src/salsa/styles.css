@@ -16,6 +16,15 @@
     width: 60%;
 }
 
+.fields fieldset.error {
+    border-color: red;
+    color: red;
+}
+
+.fields fieldset.error legend {
+    color: red;
+}
+
 .options {
     width: 20%;
 }
