@@ -116,10 +116,12 @@ class ActionsDOM {
 class Figure {
     id;
     label;
+    description;
 
-    constructor(id, label) {
+    constructor(id, label, description) {
         this.id = id;
         this.label = label;
+        this.description = description;
     }
 }
 
@@ -148,6 +150,11 @@ class FigureField
         wrapperElement.append(checkboxElement);
 
         wrapperElement.append(labelElement);
+
+        if (figure.description) {
+            wrapperElement.dataset.description = figure.description;
+            wrapperElement.classList.add('tooltip');
+        }
 
         return wrapperElement;
     }
@@ -193,7 +200,7 @@ class App
         this.store = (new Store()).init();
         const response = await fetch("/salsa/data.json");
         const data = await response.json();
-        data.data.forEach(_ => this.store.add(new Figure(_.id, _.label)));
+        data.data.forEach(_ => this.store.add(new Figure(_.id, _.label, _.description)));
         
         return this;
     }
