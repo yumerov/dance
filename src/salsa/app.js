@@ -17,6 +17,12 @@ class OutputDOM {
         element.classList.add('output');
         element.append(list);
 
+        Events.onAddToList(_ => {
+            const listItem = document.createElement('li');
+            listItem.innerText = _.detail.figure.label;
+            list.append(listItem);
+        });
+
         return element;
     }
 }
@@ -80,7 +86,7 @@ class OptionsDOM {
 class ActionsDOM {
     render() {
         const clean = this.createButton('clean', 'clean', 'Clean');
-        const add = this.createButton('add', 'add', 'Add');
+        const add = this.createButton('add', 'add', '🎲 Add');
         const add5 = this.createButton('add5', 'add5', 'Add +5');
 
         const element = document.createElement('div');
@@ -93,9 +99,9 @@ class ActionsDOM {
         legend.innerText = 'Actions';
         fieldset.append(legend);
 
-        fieldset.append(clean);
+        // fieldset.append(clean);
         fieldset.append(add);
-        fieldset.append(add5);
+        // fieldset.append(add5);
 
         element.append(fieldset);
 
@@ -107,7 +113,7 @@ class ActionsDOM {
         const button = document.createElement('button');
         button.classList.add(klass);
         button.id = id;
-        button.innerText = text;
+        button.innerHTML = text;
 
         return button;
     }
@@ -125,6 +131,33 @@ class Figure {
     }
 }
 
+class Events {
+    static fireAddToList(figure) {
+        document.dispatchEvent(new CustomEvent(
+            'add-to-list', {
+            detail: { figure: figure }
+        }))
+    }
+
+    static onAddToList(callback) {
+        document.addEventListener('add-to-list', callback);
+    }
+
+    static fireCheckboxToggle(event) {
+        document.dispatchEvent(new CustomEvent(
+            'checkbox-toggle', {
+            detail: {
+                id: event.target.dataset.id,
+                checked: event.target.checked
+            }
+        }))
+    }
+
+    static onCheckboxToggle(callback) {
+        document.addEventListener('checkbox-toggle', callback);
+    }
+}
+
 class FigureField
 {
     /**
@@ -139,13 +172,7 @@ class FigureField
         checkboxElement.setAttribute('type', 'checkbox');
         checkboxElement.checked = true;
         checkboxElement.dataset.id = figure.id;
-        checkboxElement.onchange = _ => document.dispatchEvent(new CustomEvent(
-            'checkbox-toggle', {
-                detail: {
-                    id: _.target.dataset.id,
-                    checked: _.target.checked
-                }
-            }))
+        checkboxElement.onchange = Events.fireCheckboxToggle;
         labelElement.innerText = figure.label;
         wrapperElement.append(checkboxElement);
 
@@ -157,22 +184,6 @@ class FigureField
         }
 
         return wrapperElement;
-    }
-}
-
-class Events {
-    static add() {
-        alert('click')
-        const figure = app.getRandomFigure();
-        // const listItem = document.createElement('li');
-        // listItem.innerText = figure.label;
-
-        // document.querySelector('.output').querySelector('.list').append(listItem);
-    }
-
-    static onCheckboxToggle(callback)
-    {
-        document.addEventListener('checkbox-toggle', callback);
     }
 }
 
@@ -209,7 +220,11 @@ class Store
         this.figures[figure.id] = figure;
     }
 
-    
+    addToList(id)
+    {
+        this.renderedList.push(id);
+        Events.fireAddToList(this.figures[id]);
+    }
 
     getRandomFigure() {
         const activeFigures = Object.keys(this.figuresCheckMap).filter(_ => this.figuresCheckMap[_]);
@@ -250,7 +265,7 @@ class App
 
         this.appContainer.append(header);
 
-        this.appContainer.append((new OutputDOM).render());
+        this.appContainer.append((new OutputDOM()).render());
 
         return this;
     }
@@ -258,7 +273,7 @@ class App
     initListeners()
     {
         document.querySelector('#add').addEventListener('click', _ => {
-            console.log(this.store.getRandomFigure());
+            this.store.addToList(this.store.getRandomFigure());
         });
     }
 
