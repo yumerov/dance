@@ -4,21 +4,16 @@
   "description": "UI tool for generating dance figure combination and sequences",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "lint": "./node_modules/.bin/eslint src/salsa/app.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/yumerov/dance.git"
   },
   "author": "Yumerov <levent@yumerov.com>",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/yumerov/dance/issues"
-  },
-  "homepage": "https://github.com/yumerov/dance#readme",
   "devDependencies": {
+    "@types/jest": "^29.5.11",
     "eslint": "^8.56.0",
-    "eslint-config-google": "^0.14.0"
+    "eslint-config-google": "^0.14.0",
+    "jest": "^29.7.0",
+    "jsdom": "^23.0.1"
   }
 }

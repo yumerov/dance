@@ -1,10 +1,38 @@
+if (typeof exports === 'undefined') {
+  exports = {};
+}
+
+class Functions
+{
+  /**
+   * @param {object} map 
+   * @returns {int[]}
+   */
+  static getActiveFigures(map)
+  {
+    return Object.keys(map).filter((_) => map[_]);
+  }
+
+  static getRandomElement(elements)
+  {
+    return elements[Math.floor((Math.random() * elements.length))];
+  }
+
+  static filterAvailableElements()
+  {
+
+  }
+}
+
+exports.Functions = Functions;
+
 /**
  * Represents page's header section DOM
  */
 class HeaderDOM {
   /**
-     * @return {HTMLElement}
-     */
+    * @return {HTMLElement}
+    */
   render() {
     const element = document.createElement('header');
     element.classList.add('header');
@@ -97,6 +125,7 @@ class OptionsDOM {
 
     maxRepeats.setAttribute('type', 'number');
     maxRepeats.value = 3;
+    maxRepeats.id = 'max-repeats';
     maxRepeats.setAttribute('min', 0);
     maxRepeats.setAttribute('max', 5);
     labelElement.innerText = 'Max repeats: ';
@@ -106,6 +135,16 @@ class OptionsDOM {
 
     return wrapperElement;
   }
+}
+
+/**
+ * Options DTO
+ */
+class Options {
+  /**
+   * @var {int}
+   */
+  maxRepeats;
 }
 
 /**
@@ -179,6 +218,23 @@ class Figure {
  * Wrapping app events
  */
 class Events {
+  /**
+   * @param {int} count
+   */
+  static fireMaxRepeatsChange(count) {
+    document.dispatchEvent(new CustomEvent(
+      'max-repeats', {
+      detail: { count },
+    }));
+  }
+
+  /**
+   * @param {Function} callback
+   */
+  static onMaxRepeatsChange(callback) {
+    document.addEventListener('max-repeats', callback);
+  }
+  
   /**
    * @param {Figure} figure
    */
@@ -255,6 +311,7 @@ class Store {
   figuresCheckMap = {};
   figures = {};
   renderedList = [];
+  options = new Options();
 
   /**
    * Inits the listeners
@@ -304,10 +361,15 @@ class Store {
    * @return {int}
    */
   getRandomFigure() {
-    const map = this.figuresCheckMap;
-    const activeFigures = Object.keys(map).filter((_) => map[_]);
+    const activeFigures = Functions.getActiveFigures(this.figuresCheckMap);
 
-    return activeFigures[Math.floor((Math.random() * activeFigures.length))];
+    const maxRepeats = this.options.maxRepeats;
+    if (this.renderedList.length >= maxRepeats) {
+      const last = this.renderedList.slice(-1);
+      this.renderedList.slice(-maxRepeats).filter(_ => _ === last).count();
+    }
+
+    return Functions.getRandomElement(activeFigures);
   }
 }
 
@@ -317,8 +379,8 @@ class Store {
 class App {
   appContainer;
   /**
-     * @var {Store}
-     */
+   * @var {Store}
+   */
   store;
 
   /**
@@ -365,8 +427,11 @@ class App {
    * Inits listeners
    */
   initListeners() {
-    document.querySelector('#add').addEventListener('click', (_) => {
+    document.querySelector('#add').addEventListener('click', () => {
       this.store.addToList(this.store.getRandomFigure());
+    });
+    document.querySelector('#max-repeats').addEventListener('change', _ => {
+      this.store.options.maxRepeats = _.target.value;
     });
   }
 
@@ -380,6 +445,3 @@ class App {
         .map((figure) => (new FigureField()).render(figure));
   }
 }
-
-const app = new App();
-app.init().then(() => app.render().initListeners());

@@ -11,5 +11,9 @@
     <div class="wrapper" id="app">
     </div>
     <script src="/salsa/app.js"></script>
+    <script>
+        const app = new App();
+        app.init().then(() => app.render().initListeners());
+    </script>
 </body>
 </html>
