@@ -2,24 +2,30 @@ if (typeof exports === 'undefined') {
   exports = {};
 }
 
-class Functions
-{
+/**
+ * Collecion of pure functions holding business logic
+ */
+class Functions {
   /**
-   * @param {object} map 
-   * @returns {int[]}
+   * @param {object} map
+   * @return {int[]}
    */
-  static getActiveFigures(map)
-  {
+  static getActiveFigures(map) {
     return Object.keys(map).filter((_) => map[_]);
   }
 
-  static getRandomElement(elements)
-  {
+  /**
+   * @param {array} elements
+   * @return {int}
+   */
+  static getRandomElement(elements) {
     return elements[Math.floor((Math.random() * elements.length))];
   }
 
-  static filterAvailableElements()
-  {
+  /**
+   *
+   */
+  static filterAvailableElements() {
 
   }
 }
@@ -223,9 +229,9 @@ class Events {
    */
   static fireMaxRepeatsChange(count) {
     document.dispatchEvent(new CustomEvent(
-      'max-repeats', {
-      detail: { count },
-    }));
+        'max-repeats', {
+          detail: {count},
+        }));
   }
 
   /**
@@ -234,7 +240,7 @@ class Events {
   static onMaxRepeatsChange(callback) {
     document.addEventListener('max-repeats', callback);
   }
-  
+
   /**
    * @param {Figure} figure
    */
@@ -366,7 +372,7 @@ class Store {
     const maxRepeats = this.options.maxRepeats;
     if (this.renderedList.length >= maxRepeats) {
       const last = this.renderedList.slice(-1);
-      this.renderedList.slice(-maxRepeats).filter(_ => _ === last).count();
+      this.renderedList.slice(-maxRepeats).filter((_) => _ === last).count();
     }
 
     return Functions.getRandomElement(activeFigures);
@@ -430,7 +436,7 @@ class App {
     document.querySelector('#add').addEventListener('click', () => {
       this.store.addToList(this.store.getRandomFigure());
     });
-    document.querySelector('#max-repeats').addEventListener('change', _ => {
+    document.querySelector('#max-repeats').addEventListener('change', (_) => {
       this.store.options.maxRepeats = _.target.value;
     });
   }
@@ -445,3 +451,5 @@ class App {
         .map((figure) => (new FigureField()).render(figure));
   }
 }
+
+exports.App = App;
