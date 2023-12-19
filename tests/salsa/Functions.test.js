@@ -32,4 +32,24 @@ describe(Functions.name, () => {
             expect(result[1]).toBe('ok2');
         })
     });
+
+    describe(Functions.getRandomElement.name, () => {
+        test('no values', () => {
+            expect(Functions.getRandomElement([])).toBeNull();
+        });
+
+        test('single value', () => {
+            const value = 2;
+            for (let index = 0; index < 100; index++) {
+                expect(Functions.getRandomElement([value])).toBe(value);
+            }
+        });
+
+        test('multiple values', () => {
+            const values = [1, 2, 3];
+            for (let index = 0; index < 100; index++) {
+                expect(values.includes(Functions.getRandomElement(values))).toBeTruthy();
+            }
+        });
+    });
 });

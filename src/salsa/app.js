@@ -16,9 +16,13 @@ class Functions {
 
   /**
    * @param {array} elements
-   * @return {int}
+   * @return {int|null}
    */
   static getRandomElement(elements) {
+    if (elements.length === 0) {
+      return null;
+    }
+
     return elements[Math.floor((Math.random() * elements.length))];
   }
 
